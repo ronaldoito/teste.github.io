@@ -3,22 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nível da Bateria</title>
+    <title>Sensor de Luz Ambiente</title>
 </head>
 <body>
-    <h1>Nível da Bateria</h1>
-    <p id="battery-level">Carregando...</p>
+    <h1>Sensor de Luz Ambiente</h1>
+    <p id="light-level">Carregando...</p>
 
     <script>
-        navigator.getBattery().then(function(battery) {
-            function updateBatteryStatus() {
-                document.getElementById('battery-level').textContent = 
-                    'Nível da bateria: ' + Math.round(battery.level * 100) + '%';
+        if ('AmbientLightSensor' in window) {
+            try {
+                const sensor = new AmbientLightSensor();
+                sensor.addEventListener('reading', () => {
+                    document.getElementById('light-level').textContent = 
+                        'Nível de luz: ' + sensor.illuminance + ' lux';
+                });
+                sensor.addEventListener('error', event => {
+                    document.getElementById('light-level').textContent = 
+                        'Erro ao acessar o sensor: ' + event.error.name;
+                });
+                sensor.start();
+            } catch (error) {
+                document.getElementById('light-level').textContent = 
+                    'Erro ao iniciar o sensor: ' + error.message;
             }
-
-            updateBatteryStatus();
-            battery.addEventListener('levelchange', updateBatteryStatus);
-        });
+        } else {
+            document.getElementById('light-level').textContent = 
+                'Sensor de Luz Ambiente não suportado pelo navegador.';
+        }
     </script>
 </body>
 </html>
