@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nível da Bateria</title>
+</head>
+<body>
+    <h1>Nível da Bateria</h1>
+    <p id="battery-level">Carregando...</p>
+
+    <script>
+        navigator.getBattery().then(function(battery) {
+            function updateBatteryStatus() {
+                document.getElementById('battery-level').textContent = 
+                    'Nível da bateria: ' + Math.round(battery.level * 100) + '%';
+            }
+
+            updateBatteryStatus();
+            battery.addEventListener('levelchange', updateBatteryStatus);
+        });
+    </script>
+</body>
+</html>
